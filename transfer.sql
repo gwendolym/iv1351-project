@@ -1,0 +1,45 @@
+SELECT tab.lesson_type, tab.genre, tab.instrument, tab.skill_level, tab.lesson_price, person.first_name, person.last_name, person.email
+FROM (SELECT lesson.lesson_id, lesson.price as lesson_price,
+    CASE
+        WHEN ens.lesson_id IS NOT NULL THEN 'Ensemble'
+        WHEN gro.lesson_id IS NOT NULL THEN 'Group'
+        WHEN ind.lesson_id IS NOT NULL THEN 'Individual'
+    END AS lesson_type,
+    CASE
+        WHEN ens.student_id IS NOT NULL THEN ens.student_id
+        WHEN gro.student_id IS NOT NULL THEN gro.student_id 
+        WHEN ind.student_id IS NOT NULL THEN ind.student_id
+    END AS student_id,
+    ens.genre,
+    CASE
+        WHEN gro.instrument IS NOT NULL THEN gro.instrument
+        ELSE ind.instrument
+    END AS instrument,
+    CASE
+        WHEN gro.level_id IS NOT NULL THEN gro.level_id
+        ELSE ind.level_id
+    END AS skill_level
+FROM lesson 
+LEFT JOIN (
+    Select ensemble.lesson_id, student.student_id, ensemble.genre FROM ensemble_students
+    FULL JOIN student ON student.student_id = ensemble_students.student_id
+    FULL JOIN ensemble ON ensemble_students.lesson_id = ensemble.lesson_id
+) AS ens ON ens.lesson_id = lesson.lesson_id
+LEFT JOIN (
+    Select group_skill.lesson_id, student.student_id, group_skill.instrument, group_skill.level_id FROM group_students
+FULL JOIN student ON student.student_id = group_students.student_id
+FULL JOIN (
+            Select group_lesson.lesson_id, group_lesson.skill_id, instrument_skill.instrument, instrument_skill.level_id
+            FROM group_lesson
+            LEFT JOIN instrument_skill ON group_lesson.skill_id = instrument_skill.skill_id)
+    AS group_skill ON group_students.lesson_id = group_skill.lesson_id
+) AS gro ON gro.lesson_id = lesson.lesson_id
+FULL JOIN (
+    Select lesson_id, student_id, individual_lesson.skill_id, instrument_skill.instrument, instrument_skill.level_id 
+    FROM individual_lesson 
+    LEFT JOIN instrument_skill ON individual_lesson.skill_id = instrument_skill.skill_id
+) AS ind ON ind.lesson_id = lesson.lesson_id
+ORDER BY lesson.lesson_id ASC) as tab
+LEFT JOIN person ON tab.student_id = person.person_id
+
+;
