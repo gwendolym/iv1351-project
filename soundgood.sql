@@ -131,6 +131,8 @@ ALTER TABLE rental_agreement ADD CONSTRAINT PK_rental_agreement PRIMARY KEY (stu
 
 ALTER TABLE rental_agreement ADD CONSTRAINT maxrents_agreement_id CHECK(agreement_id = 1 OR agreement_id = 2);
 
+ALTER TABLE rental_agreement ADD CONSTRAINT maxmin_lease_period CHECK(lease_period >= 0 OR lease_period <= 12);
+
 
 CREATE TABLE student_skills (
  student_id INT NOT NULL,
