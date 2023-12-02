@@ -5,7 +5,7 @@ FROM (
     where date_part('year', start_time) = 2023 
     Group by date_part('month', start_time)
 ) as norm
-
+ 
 LEFT JOIN (
     SELECT date_part('month', lesson.start_time) AS part_ind, count(*) AS count_indiv
         FROM lesson 

@@ -6,5 +6,5 @@ FROM (
 )
 GROUP BY id_tog
 ORDER BY id_tog ASC
-
+ 
 ;
