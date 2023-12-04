@@ -1,0 +1,5 @@
+Run the following query (changing the directory to where you want to put it) to create a text file containing, among
+other things, a list of insert statements matching the "lessons" table in the soundgood database. Copy those insert
+statements (and just them) and run them in the historical database to insert all the copied data.
+
+pg_dump -U postgres --table lessons --file="C:\Users\isacl\OneDrive\Desktop\KTH\KTH\Data Storage Paradigms\Soundgood\lessonsdump.txt" --column-inserts soundgood
