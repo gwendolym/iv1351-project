@@ -9,5 +9,5 @@ FROM (
 )
 LEFT JOIN person 
         ON instructor_id = person_id 
-WHERE les_amount > 0
+WHERE les_amount > 3
 ; 
